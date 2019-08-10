@@ -12,7 +12,7 @@ class LingoOut():
         """打开文件,获取数据"""
         self.info = {}
         self.variable = {}
-        self.valid = {}
+        self.decision = {}
         self.name = filename
         with open(filename) as file_object:
             for index, line in enumerate(file_object):
@@ -52,9 +52,9 @@ class LingoOut():
 
                             # 判断变量是否有效,有效的话加入valid字典
                             if value == 1:
-                                if not variable in self.valid.keys():
-                                    self.valid[variable] = []
-                                self.valid[variable].append((i, j))
+                                if not variable in self.decision.keys():
+                                    self.decision[variable] = []
+                                self.decision[variable].append((i, j))
 
                             # 将其他值加入字典
                             if not variable in self.variable.keys():
@@ -66,9 +66,9 @@ class LingoOut():
                         else:  # 处理一个变量的情况
                             # 判断变量是否有效,有效的话加入valid字典
                             if value == 1:
-                                if not variable in self.valid.keys():
-                                    self.valid[variable] = []
-                                self.valid[variable].append(i)
+                                if not variable in self.decision.keys():
+                                    self.decision[variable] = []
+                                self.decision[variable].append(i)
 
                             # 将其他值加入字典
                             if not variable in self.variable.keys():

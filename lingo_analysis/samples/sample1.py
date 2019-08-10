@@ -17,7 +17,7 @@ print(test.variable)
 # print(test["x"])
 
 print("打印有效值")
-print(test.valid)
+print(test.decision)
 
 print("打印原始数据前50行")
 test.raw(50)
