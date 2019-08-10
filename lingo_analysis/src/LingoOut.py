@@ -3,69 +3,113 @@ import re
 class LingoOut():
     """对lingo结果文件的分析"""
     def __init__(self,filename):
-        self.dict = {}
+        """打开文件,获取数据"""
+        self.info = {}
         self.variable = {}
-        self.valid = []
+        self.valid = {}
+        self.name = filename
         with open(filename) as file_object:
-            for line in file_object:
-                # 按照连续空格分隔关键字
-                line_list = line.split('  ')
-                
-                # 快速去掉空字符串
-                line_list = list(filter(None, line_list)) 
-                
-                # 去掉空行(单个'\n')
-                if len(line_list) >= 2:
-                    try:
-                        self.dict[line_list[0]] = float(line_list[1][:-1]) #[:-1 去掉每行末尾的\n]
-                    except:
-                        self.dict[line_list[0]] = line_list[1][:-1]
-                        
-        # 对变量进行处理
-        for key,value in self.dict.items(): 
-            # 匹配字符串和数字
-            var = re.search('\w*\(', key)
-            index = re.findall('\d+', key)
-            
-            # 寻找值为1的变量
-            if var and type(value) == float  and value == 1:
-                self.valid.append(key) 
-            
-            if var and len(index) == 1:
-                index_1 = int(index[0])
-                var = var.group(0)[:-1]                
-                try:
-                    self.variable[var][index_1] = value
-                except KeyError:
-                    self.variable[var] = {}
-            if var and len(index) == 2:
-                var = var.group(0)[:-1]
-                index_1 = int(index[0])
-                index_2 = int(index[1])
-                try:
-                    self.variable[var]
-                except KeyError:  
-                    self.variable[var] = {}
-                try:
-                    self.variable[var][index_1]
-                except KeyError:
-                    self.variable[var][index_1] = {}
-                self.variable[var][index_1][index_2] = value
+            for index, line in enumerate(file_object):
+                # 读取 1-18 行为基本信息,
+                if line != "\n" and 0 < index < 18 and index != 7:
+                    self.info[line[2:line.find(':')]] = float(re.search("\d+(\.\d+)?", line).group(0))
+
+                # 读取七行为模型类型
+                elif index == 7:
+                    self.info[line[2:line.find(':')]] = re.search("\w*$", line).group(0)
+
+                # 读取19行之后的变量(这些数据以空行结束,空行之后终止循环)
+                elif index > 19:
+                    value = re.search('\d+.\d+', line)
+
+                    # 若value匹配不成功,说明变量到了末尾行的回车
+                    if not value:
+                        break
+                    value = float(value.group(0))
+                    variable = re.search('\w*\(', line)
+
+                    # 处理带索引的变量值
+                    if variable:  # 匹配成功的话说明带索引
+                        # 获得变量的值
+                        variable = variable.group(0)[:-1]
+
+                        # 匹配获得第一个索引 i
+                        i = re.search('\( \d+', line)
+                        i = int(i.group(0)[1:])
+
+                        # 尝试匹配第二个索引
+                        j = re.search(', \d+', line)
+
+                        # 对有两个参数的情况进行处理
+                        if j:
+                            j = int(j.group(0)[1:])
+
+                            # 判断变量是否有效,有效的话加入valid字典
+                            if value == 1:
+                                if not variable in self.valid.keys():
+                                    self.valid[variable] = []
+                                self.valid[variable].append((i, j))
+
+                            # 将其他值加入字典
+                            if not variable in self.variable.keys():
+                                self.variable[variable] = {}
+                            if not i in self.variable[variable].keys():
+                                self.variable[variable][i] = {}
+                            self.variable[variable][i][j] = value
+
+                        else:  # 处理一个变量的情况
+                            # 判断变量是否有效,有效的话加入valid字典
+                            if value == 1:
+                                if not variable in self.valid.keys():
+                                    self.valid[variable] = []
+                                self.valid[variable].append(i)
+
+                            # 将其他值加入字典
+                            if not variable in self.variable.keys():
+                                self.variable[variable] = {}
+                            self.variable[variable][i] = value
+                    else:
+                        variable = re.search('\w+', line).group(0)
+                        self.variable[variable] = value
+
+
     def __str__(self):
         """调用print返回简单结果"""
-        str =  "Objective value:          %s\n" % self.dict['Objective value:']
-        str += "Objective bound:          %s\n" % self.dict['Objective bound:']
-        str += "Infeasibilities:          %s\n" % self.dict['Infeasibilities:']
-        str += "Extended solver steps:    %s\n" % self.dict['Extended solver steps:']
-        str += "Total solver iterations:  %s\n" % self.dict['Total solver iterations:']
-        str += "Model Class:              %s\n" % self.dict['Model Class:']
-        str += "Nonlinear variables:      %s\n" % self.dict['Nonlinear variables:']
-        str += "Integer variables:        %s\n" % self.dict['Integer variables:']
-        str += "Total constraints:        %s\n" % self.dict['Total constraints:']
-        str += "Nonlinear constraints:    %s\n" % self.dict['Nonlinear constraints:']
-        str += "Total nonzeros:           %s\n" % self.dict['Total nonzeros:']
-        str += "Nonlinear nonzeros:       %s\n" % self.dict['Nonlinear nonzeros:']
+        str = "Objective value:          %s\n" % self.info['Objective value']
+        str += "Objective bound:          %s\n" % self.info['Objective bound']
+        str += "Infeasibilities:          %s\n" % self.info['Infeasibilities']
+        str += "Extended solver steps:    %s\n" % self.info['Extended solver steps']
+        str += "Total solver iterations:  %s\n" % self.info['Total solver iterations']
+        str += "Model Class:              %s\n" % self.info['Model Class']
+        str += "Nonlinear variables:      %s\n" % self.info['Nonlinear variables']
+        str += "Integer variables:        %s\n" % self.info['Integer variables']
+        str += "Total constraints:        %s\n" % self.info['Total constraints']
+        str += "Nonlinear constraints:    %s\n" % self.info['Nonlinear constraints']
+        str += "Total nonzeros:           %s\n" % self.info['Total nonzeros']
+        str += "Nonlinear nonzeros:       %s\n" % self.info['Nonlinear nonzeros']
         return str
 
+    def __repr__(self):
+        """获取对象的可解析字符串形式"""
+        return f'LingoOut({self.name})'
 
+    def __getitem__(self, key):
+        """索引运算符(可以忽略大小写)
+        输入字符,返回变量的值
+        输入0,返回基本信息
+        """
+        if key == 0:
+            print(self)
+        else:
+            key = key.upper()
+            if key in self.variable:
+                return self.variable[key]
+            else:
+                key = '"' + key + '"'
+                return self.variable[key]
 
+    def raw(self):
+        """显示原始的文件数据"""
+        with open(self.name) as file_object:
+            for index, line in enumerate(file_object):
+                print(index, line, end=' ')
