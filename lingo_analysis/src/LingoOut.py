@@ -1,8 +1,14 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+
 import re
+from math import inf
+
 
 class LingoOut():
     """对lingo结果文件的分析"""
-    def __init__(self,filename):
+
+    def __init__(self, filename):
         """打开文件,获取数据"""
         self.info = {}
         self.variable = {}
@@ -72,7 +78,6 @@ class LingoOut():
                         variable = re.search('\w+', line).group(0)
                         self.variable[variable] = value
 
-
     def __str__(self):
         """调用print返回简单结果"""
         str = "Objective value:          %s\n" % self.info['Objective value']
@@ -97,6 +102,7 @@ class LingoOut():
         """索引运算符(可以忽略大小写)
         输入字符,返回变量的值
         输入0,返回基本信息
+        :param key: 变量的名字或0(显示基本信息)
         """
         if key == 0:
             print(self)
@@ -108,8 +114,12 @@ class LingoOut():
                 key = '"' + key + '"'
                 return self.variable[key]
 
-    def raw(self):
-        """显示原始的文件数据"""
+    def raw(self, line=inf):
+        """显示原始的文件数据
+        :param line: 打印的行数
+        """
         with open(self.name) as file_object:
-            for index, line in enumerate(file_object):
-                print(index, line, end=' ')
+            for index, line_contents in enumerate(file_object):
+                print(index + 1, line_contents, end=' ')
+                if index + 1 >= line:
+                    break

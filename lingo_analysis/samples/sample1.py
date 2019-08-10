@@ -1,18 +1,23 @@
 import sys
-import pandas as pd
+
 sys.path.append('../src/')
 from LingoOut import LingoOut
 
 filename = 'sample1.txt'
 
-out1 = LingoOut(filename)
+test = LingoOut(filename)
 
-print(pd.DataFrame(out1.variable).head())
+print("打印基本信息")
+print(test)
 
+print("查看变量字典")
+print(test.variable)
 
-# test = LingoOut('test.txt')
-# test.dict
-#
-# print(test)
-#
-# test.variable
+# print("打印索引")
+# print(test["x"])
+
+print("打印有效值")
+print(test.valid)
+
+print("打印原始数据前50行")
+test.raw(50)
