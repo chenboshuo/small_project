@@ -2,7 +2,6 @@
 # -*- encoding: utf-8 -*-
 
 import re
-from math import inf
 
 
 class LingoOut():
@@ -116,12 +115,15 @@ class LingoOut():
                 key = '"' + key + '"'
                 return self.variable[key]
 
-    def raw(self, line=inf):
+    def raw(self, limit=-1):
         """显示原始的文件数据
-        :param line: 打印的行数
+        :param limit: 打印的行数
         """
-        with open(self.name) as file_object:
-            for index, line_contents in enumerate(file_object):
-                print(index + 1, line_contents, end=' ')
-                if index + 1 >= line:
-                    break
+        if limit > 0:
+            with open(self.name) as file_object:
+                for index, line_contents in enumerate(file_object.readlines()[0:limit]):
+                    print(index + 1, line_contents, end=' ')
+        else:
+            with open(self.name) as file_object:
+                for index, line_contents in enumerate(file_object):
+                    print(index + 1, line_contents, end=' ')
