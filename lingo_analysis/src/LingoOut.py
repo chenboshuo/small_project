@@ -80,19 +80,19 @@ class LingoOut():
 
     def __str__(self):
         """调用print返回简单结果"""
-        str = "Objective value:          %s\n" % self.info['Objective value']
-        str += "Objective bound:          %s\n" % self.info['Objective bound']
-        str += "Infeasibilities:          %s\n" % self.info['Infeasibilities']
-        str += "Extended solver steps:    %s\n" % self.info['Extended solver steps']
-        str += "Total solver iterations:  %s\n" % self.info['Total solver iterations']
-        str += "Model Class:              %s\n" % self.info['Model Class']
-        str += "Nonlinear variables:      %s\n" % self.info['Nonlinear variables']
-        str += "Integer variables:        %s\n" % self.info['Integer variables']
-        str += "Total constraints:        %s\n" % self.info['Total constraints']
-        str += "Nonlinear constraints:    %s\n" % self.info['Nonlinear constraints']
-        str += "Total nonzeros:           %s\n" % self.info['Total nonzeros']
-        str += "Nonlinear nonzeros:       %s\n" % self.info['Nonlinear nonzeros']
-        return str
+        inofrmation = "Objective value:          %s\n" % self.info['Objective value']
+        inofrmation += "Objective bound:          %s\n" % self.info['Objective bound']
+        inofrmation += "Infeasibilities:          %s\n" % self.info['Infeasibilities']
+        inofrmation += "Extended solver steps:    %s\n" % self.info['Extended solver steps']
+        inofrmation += "Total solver iterations:  %s\n" % self.info['Total solver iterations']
+        inofrmation += "Model Class:              %s\n" % self.info['Model Class']
+        inofrmation += "Nonlinear variables:      %s\n" % self.info['Nonlinear variables']
+        inofrmation += "Integer variables:        %s\n" % self.info['Integer variables']
+        inofrmation += "Total constraints:        %s\n" % self.info['Total constraints']
+        inofrmation += "Nonlinear constraints:    %s\n" % self.info['Nonlinear constraints']
+        inofrmation += "Total nonzeros:           %s\n" % self.info['Total nonzeros']
+        inofrmation += "Nonlinear nonzeros:       %s\n" % self.info['Nonlinear nonzeros']
+        return inofrmation
 
     def __repr__(self):
         """获取对象的可解析字符串形式"""
