@@ -11,6 +11,6 @@
 >> [samples](./lingo_analysis/samples) | 例子
 >>
 >> [doc](./lingo_analysis/doc) | 文档
->>> [markdown 版](./lingo_analysis/docs/documenation.md)
+>>> [markdown 版](./lingo_analysis/docs/tutorial.md)
 >>>
->>> [ipynb 版](./lingo_analysis/docs/documenation.ipynb)
+>>> [ipynb 版](./lingo_analysis/docs/tutorial.ipynb)
