@@ -102,10 +102,12 @@ class LingoOut():
         """索引运算符(可以忽略大小写)
         输入字符,返回变量的值
         输入0,返回基本信息
-        :param key: 变量的名字或0(显示基本信息)
+        :param key: 变量的名字或0(显示基本信息),1(返回决策变量的字典)
         """
         if key == 0:
             print(self)
+        elif key == 1:
+            return self.decision
         else:
             key = key.upper()
             if key in self.variable:
