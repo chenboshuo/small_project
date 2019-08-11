@@ -1,5 +1,7 @@
 # small_project
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/46b5a2c40ed64ab9995fb28d13be6377)](https://app.codacy.com/app/chenboshuo/small_project?utm_source=github.com&utm_medium=referral&utm_content=chenboshuo/small_project&utm_campaign=Badge_Grade_Dashboard)
+
 > github_accelelation
 >> 根据hosts进行加速(只是粗暴的写入文件)
 >
