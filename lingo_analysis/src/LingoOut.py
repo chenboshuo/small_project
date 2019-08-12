@@ -14,22 +14,21 @@ class LingoOut():
         self.decision = {}
         self.name = filename
         with open(filename) as file_object:
-            for index, line in enumerate(file_object):
-                # 读取 1-18 行为基本信息,
-                if line != "\n" and 0 < index < 18 and index != 7:
-                    self.info[line[2:line.find(':')]] = float(re.search("\d+(\.\d+)?", line).group(0))
+            for line in file_object:
+                # 寻找标识":"
+                info_sign = line.find(':')
+                value = re.search('[\-]?[\d]+(\.[\d]*)([Ee][+-]?[\d]+)?', line)  # 匹配科学记数法
+                # info 匹配成功,则为信息行
+                if info_sign > 0:
+                    value = re.search("\d+(\.\d+)?", line)
+                    if value:
+                        self.info[line[2:info_sign]] = float(value.group(0))
+                    else:
+                        self.info[line[2:line.find(':')]] = re.search("\w*$", line).group(0)
 
-                # 读取七行为模型类型
-                elif index == 7:
-                    self.info[line[2:line.find(':')]] = re.search("\w*$", line).group(0)
-
-                # 读取19行之后的变量(这些数据以空行结束,空行之后终止循环)
-                elif index > 19:
-                    value = re.search('\d+.\d+', line)
-
-                    # 若value匹配不成功,说明变量到了末尾行的回车
-                    if not value:
-                        break
+                elif line.find('Row') > 0:  # 忽略那些每行的误差(就读取到变量行之前)
+                    break
+                elif value:
                     value = float(value.group(0))
                     variable = re.search('\w*\(', line)
 
@@ -77,21 +76,14 @@ class LingoOut():
                         variable = re.search('\w+', line).group(0)
                         self.variable[variable] = value
 
+
     def __str__(self):
         """调用print返回简单结果"""
-        inofrmation = "Objective value:          %s\n" % self.info['Objective value']
-        inofrmation += "Objective bound:          %s\n" % self.info['Objective bound']
-        inofrmation += "Infeasibilities:          %s\n" % self.info['Infeasibilities']
-        inofrmation += "Extended solver steps:    %s\n" % self.info['Extended solver steps']
-        inofrmation += "Total solver iterations:  %s\n" % self.info['Total solver iterations']
-        inofrmation += "Model Class:              %s\n" % self.info['Model Class']
-        inofrmation += "Nonlinear variables:      %s\n" % self.info['Nonlinear variables']
-        inofrmation += "Integer variables:        %s\n" % self.info['Integer variables']
-        inofrmation += "Total constraints:        %s\n" % self.info['Total constraints']
-        inofrmation += "Nonlinear constraints:    %s\n" % self.info['Nonlinear constraints']
-        inofrmation += "Total nonzeros:           %s\n" % self.info['Total nonzeros']
-        inofrmation += "Nonlinear nonzeros:       %s\n" % self.info['Nonlinear nonzeros']
-        return inofrmation
+        s = ""
+        for keys, value in self.info.items():
+            s += "{:30}{:>20}\n".format(keys, value)  # 30个字符, 20个字符右对齐
+        return s
+
 
     def __repr__(self):
         """获取对象的可解析字符串形式"""
