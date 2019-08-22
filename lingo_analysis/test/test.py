@@ -26,13 +26,13 @@ def a_test(filename):
     print(test)
 
     print("查看变量字典")
-    print(test.variable)
+    print(test.variables)
 
     # print("打印索引")
     # print(test["x"])
 
     print("打印决策变量字典")
-    print(test.decision)
+    print(test.decisions)
     print(test[1])
 
     print("打印原始数据前50行")

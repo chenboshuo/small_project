@@ -226,7 +226,7 @@ o.variable
 
 
 
-    {'X': {1: 0.0,
+    {'x': {1: 0.0,
       2: 0.0,
       3: 0.0,
       4: 0.0,
@@ -248,7 +248,7 @@ o.variable
 
 ```python
 import pandas as pd
-df = pd.DataFrame(o.variable)
+df = pd.DataFrame(o.variables)
 df.head()
 ```
 
@@ -273,10 +273,10 @@ df.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>X</th>
-      <th>L</th>
-      <th>D</th>
-      <th>U</th>
+      <th>x</th>
+      <th>l</th>
+      <th>d</th>
+      <th>u</th>
     </tr>
   </thead>
   <tbody>
@@ -323,7 +323,7 @@ df.head()
 
 
 ```python
-d = pd.DataFrame(o.variable["D"])
+d = pd.DataFrame(o.variables["d"])
 d
 ```
 
@@ -1581,7 +1581,7 @@ d
 
 ### 访问单个变量信息
 
-单个变量可以直接通过以下方式访问,这样访问不区分大小写
+单个变量可以直接通过以下方式访问.
 
 
 ```python
@@ -1644,11 +1644,13 @@ o['x']
 
 
 
+这种访问方式也可以获得基本信息
+
 它等效于
 
 
 ```python
-o.variable['X']
+o.variables['x']
 ```
 
 
@@ -1707,8 +1709,6 @@ o.variable['X']
 
 
 
-这种访问方式也可以获得基本信息
-
 
 ```python
 o[0]
@@ -1731,18 +1731,18 @@ o[0]
 
 ### 访问决策变量
 
-在整数规划中,会有0-1的变量,当他们值为1是被储存到字典`decision`中
+在整数规划中,会有0-1的变量,当他们值为1是被储存到字典`decisions`中
 
 
 ```python
-o.decision
+o.decisions
 ```
 
 
 
 
-    {'X': [15, 21, 31],
-     'U': [(1, 21),
+    {'x': [15, 21, 31],
+     'u': [(1, 21),
       (2, 21),
       (3, 21),
       (4, 21),
@@ -1805,8 +1805,8 @@ o[1]
 
 
 
-    {'X': [15, 21, 31],
-     'U': [(1, 21),
+    {'x': [15, 21, 31],
+     'u': [(1, 21),
       (2, 21),
       (3, 21),
       (4, 21),
@@ -1858,8 +1858,3 @@ o[1]
       (50, 31)]}
 
 
-
-
-```python
-
-```
